@@ -1,0 +1,10 @@
+/bin/
+
+*.classpath
+*.project
+*.checkstyle
+*.tmp
+~$*
+leaderboard.txt
+test.txt
+Passwords.java
