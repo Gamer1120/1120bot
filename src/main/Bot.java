@@ -15,6 +15,7 @@ public class Bot extends PircBot {
 	private static final int PORT = 6667;
 	private static final String TWITCHNAME = "gamer1120";
 	private List<String> channelList;
+	private static final int MAXTRIES = 2;
 
 	public Bot() {
 		this.setName(TWITCHNAME);
@@ -31,10 +32,16 @@ public class Bot extends PircBot {
 		channelList.add("#wolfsgorawr");
 		channelList.add("#inspekt0r");
 		channelList.add("#sevadus");
+		channelList.add("#wolsk");
+		channelList.add("#tehjman1993");
+		channelList.add("#zurairofl");
+		channelList.add("#sarcaster");
+		channelList.add("#kikichan94");
+		
 	}
 
 	private void setUpConnection(int tries) {
-		if (tries < 10) {
+		if (tries < MAXTRIES) {
 			try {
 				this.connect(SERVER, PORT, Passwords.OAUTH);
 				joinChannels();
@@ -43,14 +50,17 @@ public class Bot extends PircBot {
 				e.printStackTrace();
 			} catch (IOException e) {
 				System.out.println("IOException Error");
+				JOptionPane.showConfirmDialog(null,"Couldn't connect to IRC channels (IOException) :(","ERROR",JOptionPane.WARNING_MESSAGE);
 				e.printStackTrace();
 				setUpConnection(tries + 1);
 			} catch (IrcException e) {
 				System.out.println("IRCException Error");
+				JOptionPane.showMessageDialog(null,"Couldn't connect to IRC channels (IRCException) :(","ERROR",JOptionPane.WARNING_MESSAGE);
+				setUpConnection(tries + 1);
 				e.printStackTrace();
 			}
 		} else {
-			JOptionPane.showMessageDialog(null,"Couldn't connect to IRC channels :(","ERROR",JOptionPane.WARNING_MESSAGE);
+			
 			System.exit(0);
 		}
 	}
