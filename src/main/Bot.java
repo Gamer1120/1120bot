@@ -47,6 +47,7 @@ public class Bot extends PircBot {
 				joinChannels();
 			} catch (NickAlreadyInUseException e) {
 				System.out.println("Nickname already in use!");
+				JOptionPane.showConfirmDialog(null,"Couldn't connect to IRC channels (NickAlreadyInUseException) :(","ERROR",JOptionPane.WARNING_MESSAGE);
 				e.printStackTrace();
 			} catch (IOException e) {
 				System.out.println("IOException Error");
