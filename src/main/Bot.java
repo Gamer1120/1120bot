@@ -61,7 +61,6 @@ public class Bot extends PircBot {
 				e.printStackTrace();
 			}
 		} else {
-			
 			System.exit(0);
 		}
 	}
@@ -71,6 +70,7 @@ public class Bot extends PircBot {
 			this.joinChannel(channel);
 			System.out.println("Joined channel: " + channel);
 		}
+		JOptionPane.showMessageDialog(null,"Successfully connected to IRC channels.","Information",JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void main(String[] args) {
