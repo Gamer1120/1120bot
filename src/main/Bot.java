@@ -15,13 +15,12 @@ public class Bot extends PircBot {
 	private static final int PORT = 6667;
 	private static final String TWITCHNAME = "gamer1120";
 	private List<String> channelList;
-	private static final int MAXTRIES = 2;
 
 	public Bot() {
 		this.setName(TWITCHNAME);
 		this.channelList = new ArrayList<String>();
 		setUpChannelList();
-		setUpConnection(0);
+		setUpConnection();
 	}
 
 	private void setUpChannelList() {
@@ -37,30 +36,35 @@ public class Bot extends PircBot {
 		channelList.add("#zurairofl");
 		channelList.add("#sarcaster");
 		channelList.add("#kikichan94");
-		
+
 	}
 
-	private void setUpConnection(int tries) {
-		if (tries < MAXTRIES) {
-			try {
-				this.connect(SERVER, PORT, Passwords.OAUTH);
-				joinChannels();
-			} catch (NickAlreadyInUseException e) {
-				System.out.println("Nickname already in use!");
-				JOptionPane.showConfirmDialog(null,"Couldn't connect to IRC channels (NickAlreadyInUseException) :(","ERROR",JOptionPane.WARNING_MESSAGE);
-				e.printStackTrace();
-			} catch (IOException e) {
-				System.out.println("IOException Error");
-				JOptionPane.showConfirmDialog(null,"Couldn't connect to IRC channels (IOException) :(","ERROR",JOptionPane.WARNING_MESSAGE);
-				e.printStackTrace();
-				setUpConnection(tries + 1);
-			} catch (IrcException e) {
-				System.out.println("IRCException Error");
-				JOptionPane.showMessageDialog(null,"Couldn't connect to IRC channels (IRCException) :(","ERROR",JOptionPane.WARNING_MESSAGE);
-				setUpConnection(tries + 1);
-				e.printStackTrace();
-			}
-		} else {
+	private void setUpConnection() {
+		try {
+			this.connect(SERVER, PORT, Passwords.OAUTH);
+			joinChannels();
+		} catch (NickAlreadyInUseException e) {
+			System.out.println("Nickname already in use!");
+			JOptionPane
+					.showConfirmDialog(
+							null,
+							"Nickname already in use. I don't even know how this is possible../",
+							"ERROR", JOptionPane.WARNING_MESSAGE);
+			e.printStackTrace();
+			System.exit(0);
+		} catch (IOException e) {
+			System.out.println("IOException Error");
+			JOptionPane.showConfirmDialog(null,
+					"Cheesebot was unable to connect to the Twitch IRC server. Your internet is probably down.",
+					"ERROR", JOptionPane.WARNING_MESSAGE);
+			e.printStackTrace();
+			System.exit(0);
+		} catch (IrcException e) {
+			System.out.println("IRCException Error");
+			JOptionPane.showMessageDialog(null,
+					"Cheesebot was unable to connect to the Twitch IRC server. Got an IRCException.",
+					"ERROR", JOptionPane.WARNING_MESSAGE);
+			e.printStackTrace();
 			System.exit(0);
 		}
 	}
@@ -70,7 +74,9 @@ public class Bot extends PircBot {
 			this.joinChannel(channel);
 			System.out.println("Joined channel: " + channel);
 		}
-		JOptionPane.showMessageDialog(null,"Successfully connected to IRC channels.","Information",JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null,
+				"Successfully connected to IRC channels.", "Information",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void main(String[] args) {
