@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Properties;
 
 public class CommandList {
-	//TODO: Save HashMap to file.
 	private HashMap<String, String> commandMap;
 
 	public CommandList() {

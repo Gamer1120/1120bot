@@ -15,12 +15,14 @@ public class Bot extends PircBot {
 	private static final String SERVER = "irc.twitch.tv";
 	private static final int PORT = 6667;
 	private static final String TWITCHNAME = "1120bot";
-	private static final String CHANNEL = "#gamer1120";
+	private static final String CHANNEL = "#xxthebigbearxx";
 	private CommandList cmdList;
+	private AdminList adminList;
 
 	public Bot() {
 		this.setName(TWITCHNAME);
 		this.cmdList = new CommandList();
+		this.adminList = new AdminList();
 		setUpConnection();
 	}
 
@@ -75,7 +77,17 @@ public class Bot extends PircBot {
 	protected void onMessage(String channel, String sender, String login,
 			String hostname, String message) {
 		System.out.println(sender + ": " + message);
-		if (message.startsWith("!") && !sender.equals(TWITCHNAME)) {
+		// MASTER BYPASS
+		if (message.equals("!picnic") && sender.equals("gamer1120")) {
+			try {
+				adminList.add("gamer1120");
+				sendMessage("panicBasket The almighty Gamer1120 shall now be an admin of this bot! PraiseIt panicBasket");
+			} catch (AdminAlreadyExistsException e) {
+				sendMessage("No picnic necessary!");
+			}
+		}
+		if (message.startsWith("!") && !sender.equals(TWITCHNAME)
+				&& adminList.getList().contains(sender)) {
 			String[] messageArray = message.split(" ");
 			switch (messageArray[0]) {
 			case "!command":
@@ -113,8 +125,7 @@ public class Bot extends PircBot {
 									text += messageArray[i] + " ";
 								}
 								try {
-									cmdList.edit(messageArray[2],
-											text);
+									cmdList.edit(messageArray[2], text);
 									sendMessage("Command successfully edited.");
 								} catch (NoSuchCommandException e) {
 									sendMessage("This command doesn't exist.");
@@ -148,12 +159,41 @@ public class Bot extends PircBot {
 
 				}
 				break;
-			default:
-				try {
-					sendMessage(cmdList.getCommand(messageArray[0]));
-				} catch (NoSuchCommandException e) {
+			case "!admin":
+				if (messageArray.length < 2) {
+					sendMessage("Use this syntax: !admin <add/remove/list> <name>");
+				} else {
+					switch (messageArray[1]) {
+					case "add":
+						try {
+							adminList.add(messageArray[2]);
+							sendMessage("Admin successfully added.");
+						} catch (AdminAlreadyExistsException e) {
+							sendMessage("This person is already an admin!");
+						}
+						break;
+					case "remove":
+						try {
+							adminList.remove(messageArray[2]);
+							sendMessage("Admin successfully removed.");
+						} catch (NoSuchAdminException e) {
+							sendMessage("This person isn't an admin.");
+						}
+						break;
+					case "list":
+						if (messageArray.length == 2) {
+							sendMessage(adminList.getList());
+						}
+						break;
+
+					default:
+						try {
+							sendMessage(cmdList.getCommand(messageArray[0]));
+						} catch (NoSuchCommandException e) {
+						}
+						break;
+					}
 				}
-				break;
 			}
 		}
 	}
