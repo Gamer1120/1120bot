@@ -77,8 +77,6 @@ public class Bot extends PircBot {
 		System.out.println(sender + ": " + message);
 		if (message.startsWith("!") && !sender.equals(TWITCHNAME)) {
 			String[] messageArray = message.split(" ");
-			System.out
-					.println("messageArray: " + Arrays.toString(messageArray));
 			switch (messageArray[0]) {
 			case "!command":
 				if (messageArray.length < 2) {
